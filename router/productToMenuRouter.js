@@ -15,7 +15,7 @@ const { promiseQuery } = require("../sql");
 routerProductToMenu.get("/getAllFoodByMenuId/:menuId", async (req, res) => {
   try {
     const { menuId } = req.params;
-    const queryString = `select * from catering.productofmenu where  MenuTypeId=${menuId}`;
+    const queryString = `select * from catering.producttomenu where  MenuTypeId=${menuId}`;
     let row = await promiseQuery(queryString);
     const queryString2 = `select * from catering.foods`;
     let food = await promiseQuery(queryString2);
