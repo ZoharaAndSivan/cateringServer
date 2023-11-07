@@ -14,6 +14,7 @@ const { promiseQuery } = require("../sql");
 //שליפת מאכלים לפי סוג
 routerFood.get("/getAllFoodById/:id", async (req, res) => {
   const id = req.params.id;
+  console.log(id)
   try {
     const queryString = `select * from catering.foods where Active=True and FoodTypeId=${id}`;
     const row = await promiseQuery(queryString);
