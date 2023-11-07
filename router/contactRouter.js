@@ -16,11 +16,11 @@ const { promiseQuery } = require("../sql");
 //1
 //פונקציית יצירת קשר
 routerContact.post("/addContactUs", async (req, res) => {
-  try {
-    //קבלת הנתונים
+  //קבלת הנתונים
     const details = req.body;
+  try {  
     //שאילתת הוספה לטבלת צור קשר
-    const queryString = `INSERT INTO catering.contact VALUES(0,"${details.FirstName}","${details.LastName}","${details.Fhone}","${details.Note}",False);`;
+    const queryString = `INSERT INTO catering.contact VALUES(0,"${details.FirstName}","${details.LastName}","${details.Phone}","${details.Note}",False);`;
     const row = await promiseQuery(queryString);
     res.send("פרטיך נקלטו בהצלחה!!! ניצור איתך קשר בהקדם");
   } catch (err) {
@@ -37,7 +37,7 @@ routerContact.put("/UpdatePerform/:id", async (req, res) => {
   //שקיבל בפרמס
   const userId = req.params.id;
   //שאילתא לחיפוש הלקוח כדי לשנות את השדה
-  const queryString = `UPDATE catering.contact SET Perform=True WHERE id=${userId}`;
+  const queryString = `UPDATE catering.contact SET Perform=True WHERE Id=${userId}`;
   const row = await promiseQuery(queryString);
   res.send("נוצר קשר עם הלקוח");
 });
@@ -58,7 +58,7 @@ routerContact.get("/getAllContactNotPerform", async (req, res) => {
       console.log(err);
     }
   });
-
+  
 
 
 

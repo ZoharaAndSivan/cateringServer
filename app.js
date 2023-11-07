@@ -29,7 +29,10 @@ const { routerContact } = require("./router/contactRouter");
 const { routerOpinion } = require("./router/opinionRouter");
 //ראוטר הזמנות
 const { routerOrder } = require("./router/orderRouter");
-
+//ראוטר תעודת כשרות
+const { routerKosherCertificate } = require("./router/KosherCertificateRouter");
+//ראוטר הזמנות מאכלים
+const { routerFoodsOrders } = require("./router/foodsOrdersRouter");
 
 //ייבוא אס קיו אל
 const { mysqlConnection } = require("./sql");
@@ -53,6 +56,8 @@ app.use("/userRouter", routerUser);
 app.use("/contactRouter",routerContact)
 app.use("/opinionRouter",routerOpinion)
 app.use("/orderRouter",routerOrder)
+app.use("/KosherCertificateRouter",routerKosherCertificate)
+app.use("/foodsOrdersRouter",routerFoodsOrders)
 const port = 8080;
 
 //העלעת השרת

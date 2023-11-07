@@ -15,7 +15,7 @@ const { promiseQuery } = require("../sql");
 routerFood.get("/getAllFoodById/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    const queryString = `select * from catering.foods where Active=True and FoodType=${id}`;
+    const queryString = `select * from catering.foods where Active=True and FoodTypeId=${id}`;
     const row = await promiseQuery(queryString);
     res.send(row);
   } catch (err) {
@@ -32,7 +32,7 @@ routerFood.post("/addFood", async (req, res) => {
   try{
 
     //-----------לבדוק אם המאכל הזה כבר קיים-----------------
-    const queryString=`INSERT INTO catering.foods  VALUES (0,"${food.Name}",${food.FoodType},True,"${food.Price}");`
+    const queryString=`INSERT INTO catering.foods  VALUES (0,"${food.Name}",${food.FoodTypeId},"${food.Price}","${food.Image}",True);`
     const row=await promiseQuery(queryString)
     res.send("המאכל הוסף בהצלחה")
   }
@@ -44,7 +44,7 @@ routerFood.post("/addFood", async (req, res) => {
 })
 
 //מחיקת מאכל
-routerFood.post("/updateActive/:id", async (req, res) => {
+routerFood.put("/updateActive/:id", async (req, res) => {
   const id=req.params.id
   try{
     const queryString = `UPDATE catering.foods SET Active =False WHERE Id=${id}`
@@ -62,7 +62,7 @@ routerFood.post("/updateActive/:id", async (req, res) => {
 //3
 //עדכון מחיר המאכל 
 //עדכון המחיר של המאכל שהוא בתוספת תשלום למחיר המנה הכוללת
-routerFood.post("/updatePrice/:id", async (req, res) => {
+routerFood.put("/updatePrice/:id", async (req, res) => {
   const id=req.params.id
   const newPrice=req.body
   try{
@@ -96,11 +96,11 @@ routerFood.get("/getAllFood", async (req, res) => {
 //5
 //שינוי קטגוריה של סוג מאכל
 
-routerFood.post("/updatePrice/:id", async (req, res) => {
+routerFood.put("/updatePrice/:id", async (req, res) => {
   const id=req.params.id
   const newFoodType=req.body
   try{
-    const queryString = `UPDATE catering.foods SET FoodType =${newFoodType.Id} WHERE Id=${id}`
+    const queryString = `UPDATE catering.foods SET FoodTypeId =${newFoodType.Id} WHERE Id=${id}`
     const row=await promiseQuery(queryString)
     res.send("סוג המאכל עודכן בהצלחה")
   }
@@ -111,6 +111,9 @@ routerFood.post("/updatePrice/:id", async (req, res) => {
   }
 })
 
+
+//החלפת תמונה
+//--------
 
 
 

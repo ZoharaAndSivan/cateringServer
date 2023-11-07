@@ -32,15 +32,46 @@ routerOpinion.post("/addOpinion/:userId", async (req, res) => {
     const userId=req.params.id
     const opinion = req.body;
     try {
-      const queryString = `INSERT INTO catering.opinion  VALUES (0,"${userId}","${opinion.OpinionWrite}")`;
+      const queryString = `INSERT INTO catering.opinion  VALUES (0,"${userId}","${opinion.OpinionWrite}",False)`;
       const row = await promiseQuery(queryString);
-      //לבדוק אם הוסף
       res.send("חוות הדעת  הוספה בהצלחה");
     } catch (err) {
       console.log(err);
       res.send(err);
     }
   });
+
+
+  //3
+  //לעדכן חות דעת שהיא ראויה לעלות
+  routerOpinion.put("/updateApproval/:id",async(req,res)=>{
+    const id=req.params.id
+    try{
+        const queryString = `UPDATE catering.menutype SET Approval =True WHERE Id=${id} `
+        const row=await promiseQuery(queryString)
+        res.send("חוות דעת שמשתמשים יכולים לצפות")
+    }
+    catch(err){
+        console.log(err);
+        res.send(err);
+    }
+    })
+
+
+//4
+//שליפה של כל חוות הדעת שיכולים לצפות
+routerOpinion.get("/getAllOpinionApproval", async (req, res) => {
+  try {
+    const queryString = `select * from catering.opinion where Approval =True `;
+    const row = await promiseQuery(queryString);
+    res.send(row);
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
+
+
 
 
 

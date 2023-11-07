@@ -31,13 +31,7 @@ routerFoodsType.put("/updateActive/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const queryString = `UPDATE catering.foodstype SET Active=False WHERE Id=${id};`;
-    //בדיקה אם זה עודכן ללא פעיל
-    // const queryString2=`select * from catering.eventtype where Id=${id}`
-    // const row2=await promiseQuery(queryString);
-    // if(row2[0].Active==False)
-    // res.send("סוג האירוע נמחק");
-    // else
-    // res.send("סוג האירוע לא נמחק");
+    const row=await promiseQuery(queryString);
     res.send("סוג המאכל נמחק");
   } catch (err) {
     console.log(err);
@@ -52,7 +46,6 @@ routerFoodsType.post("/addFoodType", async (req, res) => {
   try {
     const queryString = `INSERT INTO catering.foodstype  VALUES (0,"${nameFoodType.Name}",True);`;
     const row = await promiseQuery(queryString);
-    //לבדוק שהוא הוסף
     res.send("סוג המאכל הוסף בהצלחה");
   } catch (err) {
     console.log(err);
@@ -68,7 +61,6 @@ routerFoodsType.put("/updateNameFoodType/:id", async (req, res) => {
   const newName = req.body;
   try {
     const queryString = `UPDATE catering.foodstype SET Name ="${newName.Name}" WHERE Id=${id};`;
-    //לבדוק שהוא עודכן
     res.send("שם סוג המאכל עודכן");
   } catch (err) {
     console.log(err);

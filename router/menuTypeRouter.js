@@ -48,15 +48,14 @@ routerMenuType.get("/getAllTypeForMenu/:id",async(req,res)=>{
 
 
 //עדכונים
-//לבדוק תנאים-----------------------
-//ולבדוק שזה באמת עודכן
 
 //3
 //עדכון כמות שאפשר לבחור מסוג מסוים
-routerMenuType.put("/updateAmount",async(req,res)=>{
+routerMenuType.put("/updateAmount/:id",async(req,res)=>{
+const id=req.params.id
 const newAmount=req.body;
 try{
-    const queryString = `UPDATE catering.menutype SET Amount =${newAmount.Amount} WHERE `
+    const queryString = `UPDATE catering.menutype SET Amount =${newAmount.Amount} WHERE Id=${id} `
     const row=await promiseQuery(queryString)
     res.send("הכמות עודכנה בהצלחה")
 }
@@ -70,10 +69,11 @@ catch(err){
 
 //4
 //עדכון תוספת מחיר שאפשר לבחור מסוג מסוים
-routerMenuType.put("/updateExtraPrice",async(req,res)=>{
+routerMenuType.put("/updateExtraPrice/:id",async(req,res)=>{
+    const id=req.params.id
     const newExtraPrice=req.body;
     try{
-        const queryString = `UPDATE catering.menutype SET ExtraPrice =${newExtraPrice.ExtraPrice} WHERE `
+        const queryString = `UPDATE catering.menutype SET ExtraPrice =${newExtraPrice.ExtraPrice} WHERE WHERE Id=${id}`
         const row=await promiseQuery(queryString)
         res.send("תוספת מחיר עודכן בהצלחה")
     }
@@ -86,10 +86,11 @@ routerMenuType.put("/updateExtraPrice",async(req,res)=>{
 
 //5
 //עדכון מחיר של כל סוג נוסף שאפשר לבחור מסוג מסוים
-routerMenuType.put("/updateExtraType",async(req,res)=>{
+routerMenuType.put("/updateExtraType/:id",async(req,res)=>{
     const newExtraType=req.body;
+    const id=req.params.id
     try{
-        const queryString = `UPDATE catering.menutype SET ExtraType =${newExtraType.EExtraType} WHERE `
+        const queryString = `UPDATE catering.menutype SET ExtraType =${newExtraType.ExtraType} WHERE WHERE Id=${id} `
         const row=await promiseQuery(queryString)
         res.send(" מחיר של כל סוג נוסף עודכן בהצלחה")
     }
@@ -100,10 +101,15 @@ routerMenuType.put("/updateExtraType",async(req,res)=>{
     })
 
 
+
+//עדכונים של הכלללללל
+
+
+
 //6
 //כאשר אנימוחקת אירוע הוא צריך להגיע לכאן ולהפוך את כל סוגי התפריטים 
 //שמתאימים לסוג שנבחר
-routerMenuType.put("/updateActive/:idEventType",async(req,res)=>{
+routerMenuType.put("/updateActiveEvent/:idEventType",async(req,res)=>{
     const id=req.params.idEventType
     try{
         const queryString = `UPDATE catering.menutype SET Active =False WHERE MenuId=${id}`
@@ -120,12 +126,11 @@ routerMenuType.put("/updateActive/:idEventType",async(req,res)=>{
 //7
 //להפוך שורה מסוימת ללא פעילה
 //לדוגמא למחוק את מנה עיקית בתפריט מסוים שאני נמצאת בו
-routerMenuType.put("/updateActive/:id",async(req,res)=>{
+routerMenuType.put("/updateActiveRow/:id",async(req,res)=>{
     const id=req.params.id
     try{
-        const queryString = `UPDATE catering.menutype SET Active =False WHERE`
+        const queryString = `UPDATE catering.menutype SET Active =False WHERE Id=${id}`
         const row=await promiseQuery(queryString)
-        //לבדוק שזה נמחק
         res.send("סוג המאכל בתפריט נמחק בהצלחה")
     }
     catch(err){
@@ -136,23 +141,23 @@ routerMenuType.put("/updateActive/:id",async(req,res)=>{
 
 //8
 //הוספת שורה שלימה של סוג מאכל
-routerMenuType.post("/addTypeOfMenu", async (req, res) => {
+routerMenuType.post("/addTypeOfMenu/:MenuId", async (req, res) => {
+    const id=req.params.MenuId
     const rowType=req.body;
     try{
-       //לבדוק אם סוג המאכל קיים בטבלת סוגי מאכלים
-       const queryString=`SELECT * FROM catering.foodstype where Name=${FoodTypeId}`;
-       const row=await promiseQuery(queryString)
-       if(row==0)
-       {
-        res.send("סוג המאכל לא קיים האם תרצה להוסיף אותו")
-       }
-       else
-       {
-      //-----------לבדוק אם המאכל הזה כבר קיים-----------------
-      const queryString=`INSERT INTO catering.menutype  VALUES (0,True);`
+    //    //לבדוק אם סוג המאכל קיים בטבלת סוגי מאכלים
+    //    const queryString=`SELECT * FROM catering.foodstype where Name=${rowType.FoodTypeId}`;
+    //    const row=await promiseQuery(queryString)
+    //    if(row==0)
+    //    {
+    //     res.send("סוג המאכל לא קיים האם תרצה להוסיף אותו")
+    //     //אם כן ילך לטבלת סוגי מאכלים ויוסיף
+    //    }
+    //    else{
+      const queryString=`INSERT INTO catering.menutype  VALUES (0,${id},${rowType.FoodTypeId},"${rowType.Amount}","${rowType.ExtraPrice}","${rowType.ExtraType}",True);`
       const row=await promiseQuery(queryString)
       res.send(" הוסף בהצלחה")
-       }      
+    //    }      
    
     }
     catch(err)
@@ -162,15 +167,16 @@ routerMenuType.post("/addTypeOfMenu", async (req, res) => {
     }
   })
 
+
+  
 //9
-  //כאשר אנימוחקת אירוע הוא צריך להגיע לכאן ולהפוך את כל סוגי התפריטים 
-//שמתאימים לסוג שנבחר
-routerMenuType.put("/updateActive/:idFoodType",async(req,res)=>{
+//כאשר אנימוחקת סוג מאכל הוא צריך להגיע לכאן ולהפוך את כל השורות שנמצא בהם סוג המאכל שנמחק 
+routerMenuType.put("/updateActiveFoodType/:idFoodType",async(req,res)=>{
     const id=req.params.idFoodType
     try{
         const queryString = `UPDATE catering.menutype SET Active =False WHERE FoodTypeId=${id}`
         const row=await promiseQuery(queryString)
-        res.send("סוג התפריט נמחק בהצלחה")
+        res.send("סוג המאכל מכל התפריטים נמחק בהצלחה")
     }
     catch(err){
         console.log(err);
