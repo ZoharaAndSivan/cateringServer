@@ -17,7 +17,7 @@ routerOrder.post("/addOrder",async(req,res)=>{
     const details = req.body;
     try{
         const queryString = `INSERT INTO catering.orders VALUES(0,"${UserId}","${MenuId}","${details.OrderDate}",
-        "${details.EventDate}","${details.EventPlace}","${details.EventTime}","${details.ArrivalTime},False"
+        "${details.EventDate}","${details.EventPlace}","${details.EventTime}","${details.ArrivalTime},True"
         "${details.FullPrice}","${details.Note}",False);`;
         const row = await promiseQuery(queryString);
         res.send("ההזמנה נשלחה לכניסה להזמנה לשינויים יכנס באמצעות הסיסמא שנשלחה לך")
@@ -88,7 +88,7 @@ routerOrder.put("/UpdateApproval/:id", async (req, res) => {
 //הצגת כל ההזמנות שעדיין התאריך לא עבר
 routerOrder.get("/getOrderThatDateNotMoved",async (req,res)=>{
     //שמירת התאריך הנוכחי
-    const date=null;
+    const date=new Date();
     try{
         const queryString=`select * from catering.orders where EventDate>="${date}" and IsClose=False`
         const row=await promiseQuery(queryString)
@@ -104,7 +104,7 @@ routerOrder.get("/getOrderThatDateNotMoved",async (req,res)=>{
 //הצגת כל ההזמנות של היום הנוכחי
 routerOrder.get("/getOrderThatDateToday",async (req,res)=>{
     //שמירת התאריך הנוכחי
-    const date=null;
+    const date=new Date();
     try{
         const queryString=`select * from catering.orders where EventDate="${date}" and IsClose=False`
         const row=await promiseQuery(queryString)
@@ -120,7 +120,7 @@ routerOrder.get("/getOrderThatDateToday",async (req,res)=>{
 //הצגת כל ההזמנות של יום למחרת
 routerOrder.get("/getOrderThatDateTomorrow",async (req,res)=>{
     //שמירת התאריך הנוכחי
-    const date=null;
+    const date=new Date();
     //שמירת התאריך של יום למחרת התאריך הנוכחי
     const tomorrow=null;
     try{

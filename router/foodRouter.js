@@ -63,20 +63,20 @@ routerFood.put("/updateActive/:id", async (req, res) => {
 //3
 //עדכון מחיר המאכל 
 //עדכון המחיר של המאכל שהוא בתוספת תשלום למחיר המנה הכוללת
-routerFood.put("/updatePrice/:id", async (req, res) => {
-  const id=req.params.id
-  const newPrice=req.body
-  try{
-    const queryString = `UPDATE catering.foods SET Price =${newPrice.Price} WHERE Id=${id}`
-    const row=await promiseQuery(queryString)
-    res.send("מחיר המאכל עודכן בהצלחה")
-  }
-  catch(err)
-  {
-    console.log(err)
-    res.send(err)
-  }
-})
+// routerFood.put("/updatePrice/:id", async (req, res) => {
+//   const id=req.params.id
+//   const newPrice=req.body
+//   try{
+//     const queryString = `UPDATE catering.foods SET Price =${newPrice.Price} WHERE Id=${id}`
+//     const row=await promiseQuery(queryString)
+//     res.send("מחיר המאכל עודכן בהצלחה")
+//   }
+//   catch(err)
+//   {
+//     console.log(err)
+//     res.send(err)
+//   }
+// })
 
 
 //4
@@ -97,11 +97,28 @@ routerFood.get("/getAllFood", async (req, res) => {
 //5
 //שינוי קטגוריה של סוג מאכל
 
-routerFood.put("/updatePrice/:id", async (req, res) => {
+// routerFood.put("/updateFoodTypeId/:id", async (req, res) => {
+//   const id=req.params.id
+//   const newFoodType=req.body
+//   try{
+//     const queryString = `UPDATE catering.foods SET FoodTypeId =${newFoodType.Id} WHERE Id=${id}`
+//     const row=await promiseQuery(queryString)
+//     res.send("סוג המאכל עודכן בהצלחה")
+//   }
+//   catch(err)
+//   {
+//     console.log(err)
+//     res.send(err)
+//   }
+// })
+
+//6
+//כל העדכונים
+routerFood.put("/updateAll/:id", async (req, res) => {
   const id=req.params.id
-  const newFoodType=req.body
+  const body=req.body
   try{
-    const queryString = `UPDATE catering.foods SET FoodTypeId =${newFoodType.Id} WHERE Id=${id}`
+    const queryString = `UPDATE catering.foods SET Price =${body.Price},FoodTypeId =${body.Id} WHERE Id=${id}`
     const row=await promiseQuery(queryString)
     res.send("סוג המאכל עודכן בהצלחה")
   }
@@ -111,7 +128,6 @@ routerFood.put("/updatePrice/:id", async (req, res) => {
     res.send(err)
   }
 })
-
 
 //החלפת תמונה
 //--------

@@ -41,12 +41,12 @@ routerUser.post("/addUser", async (req, res) => {
     //קבלת הפרטים למשתנים
     const firstName = details.FirstName;
     const lastName = details.LastName;
-    const fhone = details.Fhone;
+    const Phone = details.Phone;
     const address = details.Address;
     const email = details.Email;
 
     //שאילתא שבודקת אם הלקוח הזה כבר רשום
-    const queryString = `select * from catering.users where FirstName="${firstName}" and LastName="${lastName}" and Fhone="${fhone}" and Address=${address} and Email=${email} and Active=True`;
+    const queryString = `select * from catering.users where FirstName="${firstName}" and LastName="${lastName}" and Phone="${Phone}" and Address=${address} and Email=${email} and Active=True`;
     const row = await promiseQuery(queryString);
     if (row.length == 0) {
       //קבלת כל האובייקט
@@ -55,7 +55,7 @@ routerUser.post("/addUser", async (req, res) => {
       //מגרילה לו סיסמא כדי שעל ידה יוכל להכנס לאיזור האישי שלו  
       const randomPassword = Math.floor(Math.random() * 100001);;
       //כאשר הסיסמא לא קיימת מכניסה אותה
-      const queryString = `INSERT INTO catering.users VALUES(0,"${user.FirstName}","${user.LastName}","${user.Fhone}", "${user.Address}","${user.Email}","${randomPassword}",3,True);`;
+      const queryString = `INSERT INTO catering.users VALUES(0,"${user.FirstName}","${user.LastName}","${user.Phone}", "${user.Address}","${user.Email}","${randomPassword}",3,True);`;
       const row = await promiseQuery(queryString);
       res.send("נרשמת בהצלחה!!!");
     } else {
@@ -76,28 +76,26 @@ routerUser.post("/addOfficial", async (req, res) => {
     //קבלת הפרטים למשתנים
     const firstName = details.FirstName;
     const lastName = details.LastName;
-    const fhone = details.Fhone;
+    const Phone = details.Phone;
     const address = details.Address;
     const email = details.Email;
 
     //שאילתא שבודקת אם הלקוח הזה כבר רשום
-    const queryString = `select * from catering.users where FirstName="${firstName}" and LastName="${lastName}" and Fhone="${fhone}" and Address=${address} and Email=${email} and Active=True`;
+    const queryString = `select * from catering.users where FirstName="${firstName}" and LastName="${lastName}" and Phone="${Phone}" and Address=${address} and Email=${email} and Active=True`;
     const row = await promiseQuery(queryString);
     if (row.length == 0) {
       //קבלת כל האובייקט
       const user = req.body;
       //שאילתא להוספת המשתמש
       //מגרילה לו סיסמא כדי שעל ידה יוכל להכנס לאיזור האישי שלו
-      //-------------------------------------
-
-      const randomPassword = null;
+      const randomPassword = Math.floor(Math.random() * 100001);;
       //בודקת אם הסיסמא לא קיימת
       // while (rowPassword == 0) {
       //   let queryString1 = `select * from catering.users where Password="${random}"`;
       //   randomPassword = await promiseQuery(queryString1);
       // }
       //כאשר הסיסמא לא קיימת מכניסה אותה
-      const queryString = `INSERT INTO catering.users VALUES(0,"${user.FirstName}","${user.LastName}","${user.Fhone}", "${user.Address}","${user.Email}","${random}",2,True);`;
+      const queryString = `INSERT INTO catering.users VALUES(0,"${user.FirstName}","${user.LastName}","${user.Phone}", "${user.Address}","${user.Email}","${randomPassword}",2,True);`;
       const row = await promiseQuery(queryString);
       res.send("הוספת עובד  בהצלחה !!!");
     } else {

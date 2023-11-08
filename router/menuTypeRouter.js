@@ -51,46 +51,63 @@ routerMenuType.get("/getAllTypeForMenu/:id",async(req,res)=>{
 
 //3
 //עדכון כמות שאפשר לבחור מסוג מסוים
-routerMenuType.put("/updateAmount/:id",async(req,res)=>{
-const id=req.params.id
-const newAmount=req.body;
-try{
-    const queryString = `UPDATE catering.menutype SET Amount =${newAmount.Amount} WHERE Id=${id} `
-    const row=await promiseQuery(queryString)
-    res.send("הכמות עודכנה בהצלחה")
-}
-catch(err){
-    console.log(err);
-    res.send(err);
-}
-})
+// routerMenuType.put("/updateAmount/:id",async(req,res)=>{
+// const id=req.params.id
+// const newAmount=req.body;
+// try{
+//     const queryString = `UPDATE catering.menutype SET Amount =${newAmount.Amount} WHERE Id=${id} `
+//     const row=await promiseQuery(queryString)
+//     res.send("הכמות עודכנה בהצלחה")
+// }
+// catch(err){
+//     console.log(err);
+//     res.send(err);
+// }
+// })
 
 
 
 //4
 //עדכון תוספת מחיר שאפשר לבחור מסוג מסוים
-routerMenuType.put("/updateExtraPrice/:id",async(req,res)=>{
-    const id=req.params.id
-    const newExtraPrice=req.body;
-    try{
-        const queryString = `UPDATE catering.menutype SET ExtraPrice =${newExtraPrice.ExtraPrice} WHERE WHERE Id=${id}`
-        const row=await promiseQuery(queryString)
-        res.send("תוספת מחיר עודכן בהצלחה")
-    }
-    catch(err){
-        console.log(err);
-        res.send(err);
-    }
-    })
+// routerMenuType.put("/updateExtraPrice/:id",async(req,res)=>{
+//     const id=req.params.id
+//     const newExtraPrice=req.body;
+//     try{
+//         const queryString = `UPDATE catering.menutype SET ExtraPrice =${newExtraPrice.ExtraPrice}  WHERE Id=${id}`
+//         const row=await promiseQuery(queryString)
+//         res.send("תוספת מחיר עודכן בהצלחה")
+//     }
+//     catch(err){
+//         console.log(err);
+//         res.send(err);
+//     }
+//     })
 
 
 //5
 //עדכון מחיר של כל סוג נוסף שאפשר לבחור מסוג מסוים
-routerMenuType.put("/updateExtraType/:id",async(req,res)=>{
-    const newExtraType=req.body;
+// routerMenuType.put("/updateExtraType/:id",async(req,res)=>{
+//     const newExtraType=req.body;
+//     const id=req.params.id
+//     try{
+//         const queryString = `UPDATE catering.menutype SET ExtraType =${newExtraType.ExtraType}  WHERE Id=${id} `
+//         const row=await promiseQuery(queryString)
+//         res.send(" מחיר של כל סוג נוסף עודכן בהצלחה")
+//     }
+//     catch(err){
+//         console.log(err);
+//         res.send(err);
+//     }
+//     })
+
+
+
+//עדכונים של הכלללללל
+routerMenuType.put("/updateAll/:id",async(req,res)=>{
+    const body=req.body;
     const id=req.params.id
     try{
-        const queryString = `UPDATE catering.menutype SET ExtraType =${newExtraType.ExtraType} WHERE WHERE Id=${id} `
+        const queryString = `UPDATE catering.menutype SET Amount =${body.Amount}, ExtraPrice =${body.ExtraPrice},ExtraType =${body.ExtraType} WHERE Id=${id} `
         const row=await promiseQuery(queryString)
         res.send(" מחיר של כל סוג נוסף עודכן בהצלחה")
     }
@@ -99,11 +116,6 @@ routerMenuType.put("/updateExtraType/:id",async(req,res)=>{
         res.send(err);
     }
     })
-
-
-
-//עדכונים של הכלללללל
-
 
 
 //6

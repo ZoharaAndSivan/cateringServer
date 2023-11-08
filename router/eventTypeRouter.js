@@ -100,7 +100,7 @@ routerEventType.put("/update/:id", async (req, res) => {
   const id = req.params.id;
   const body = req.body;
   try {
-    const queryString = `UPDATE catering.eventtype SET Details ="${body.Details},Details ="${body.Name} WHERE Id=${id};`
+    const queryString = `UPDATE catering.eventtype SET Name ="${body.Name}",Details ="${body.Details} WHERE Id=${id};`
     const row = await promiseQuery(queryString);
   res.send("תיאור עודכן");
   } catch (err) {

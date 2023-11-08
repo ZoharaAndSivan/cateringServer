@@ -7,7 +7,7 @@ const express = require("express");
 const routerMenuEventType = express.Router();
 
 const mysql = require("mysql2");
-
+ 
 //מאפשר לעשות שאילתה לדאטה בייס
 const { promiseQuery } = require("../sql");
 
@@ -45,42 +45,42 @@ routerMenuEventType.get("/getAllMenuByEventTypeId/:id",async(req,res)=>{
 })
 
 
-//3
-//עדכון מחיר למנה
-routerMenuEventType.put("/updatePrice/:id",async(req,res)=>{
-    const id=req.params.id
-    const newPrice=req.body.Price
-    try{
-        const queryString=`UPDATE catering.menueventtype SET Price ="${newPrice}" WHERE Id=${id};`
-        row=await promiseQuery(queryString)
-        res.send("המחיר עודכן בהצלחה")
-    }
-    catch(err)
-    {
-        console.log(err)
-        res.send(err)
-    }
-})
+// //3
+// //עדכון מחיר למנה
+// routerMenuEventType.put("/updatePrice/:id",async(req,res)=>{
+//     const id=req.params.id
+//     const newPrice=req.body.Price
+//     try{
+//         const queryString=`UPDATE catering.menueventtype SET Price ="${newPrice}" WHERE Id=${id};`
+//         row=await promiseQuery(queryString)
+//         res.send("המחיר עודכן בהצלחה")
+//     }
+//     catch(err)
+//     {
+//         console.log(err)
+//         res.send(err)
+//     }
+// })
 
 
 
 
 //4
 //עדכון מינימום אנשים
-routerMenuEventType.put("/updateMinimumPeople/:id",async(req,res)=>{
-    const id=req.params.id
-    const newMinimumPeople=req.body.MinimumPeople
-    try{
-        const queryString=`UPDATE catering.menueventtype SET Price ="${newMinimumPeople}" WHERE Id=${id};`
-        row=await promiseQuery(queryString)
-        res.send("מספר מינימום האנשים עודכן עודכן בהצלחה")
-    }
-    catch(err)
-    {
-        console.log(err)
-        res.send(err)
-    }
-})
+// routerMenuEventType.put("/updateMinimumPeople/:id",async(req,res)=>{
+//     const id=req.params.id
+//     const newMinimumPeople=req.body.MinimumPeople
+//     try{
+//         const queryString=`UPDATE catering.menueventtype SET MinimumPeople ="${newMinimumPeople}" WHERE Id=${id};`
+//         row=await promiseQuery(queryString)
+//         res.send("מספר מינימום האנשים עודכן עודכן בהצלחה")
+//     }
+//     catch(err)
+//     {
+//         console.log(err)
+//         res.send(err)
+//     }
+// })
 
 
 
@@ -164,7 +164,20 @@ routerMenuEventType.put("/updateName/:id",async(req,res)=>{
 
 //9 
 //עדכון של כל השינווים שהתבצעו
-
+routerMenuEventType.put("/updateAll/:id",async(req,res)=>{
+    const id=req.params.id
+    const body=req.body
+    try{
+        const queryString=`UPDATE catering.menueventtype SET Price ="${newPrice}",MinimumPeople ="${newMinimumPeople}" WHERE Id=${id};`
+        row=await promiseQuery(queryString)
+        res.send("המחיר עודכן בהצלחה")
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.send(err)
+    }
+})
 
 
 //כאשר אני מוחקת אירוע מסוים לדוגמא בר מצווה
