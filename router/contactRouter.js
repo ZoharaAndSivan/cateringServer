@@ -20,7 +20,7 @@ routerContact.post("/addContactUs", async (req, res) => {
     const details = req.body;
   try {  
     //שאילתת הוספה לטבלת צור קשר
-    const queryString = `INSERT INTO catering.contact VALUES(0,"${details.FirstName}","${details.LastName}","${details.Phone}","${details.Note}",False);`;
+    const queryString = `INSERT INTO catering.contact VALUES(0,"${details.FullName}","${details.Phone}","${details.Note}",False,"${details.Email}");`;
     const row = await promiseQuery(queryString);
     res.send("פרטיך נקלטו בהצלחה!!! ניצור איתך קשר בהקדם");
   } catch (err) {
