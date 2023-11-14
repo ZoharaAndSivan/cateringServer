@@ -13,19 +13,19 @@ const { promiseQuery } = require("../sql");
 
 
 //1
-//שליפה של כל התפריטים לסוגי אירועי
-// routerMenuEventType.get("/getAllMenuEventType",async(req,res)=>{
-//     try{
-//         const queryString=`SELECT * FROM catering.menueventtype where Active=True`
-//         const rows=await promiseQuery(queryString)
-//         res.send(rows)
-//     }
-//     catch(err)
-//     {
-//         console.log(err)
-//         res.send(err)
-//     }
-// })
+// שליפה של כל התפריטים לסוגי אירועי
+routerMenuEventType.get("/getAllMenuEventType",async(req,res)=>{
+    try{
+        const queryString=`SELECT * FROM catering.menueventtype where Active=True`
+        const rows=await promiseQuery(queryString)
+        res.send(rows)
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.send(err)
+    }
+})
 
 
 //2
