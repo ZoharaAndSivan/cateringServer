@@ -12,18 +12,18 @@ const { promiseQuery } = require("../sql");
 
 
 //1
-//שליפה של כל סוגי תפריטים
-// routerMenuType.get("./getAllMenuType",async(req,res)=>{
-//     try{
-//        const queryString=`select * from catering.menutype where Active=True`
-//        const rows=await promiseQuery(queryString);
-//        res.send(rows);
-//     }
-//     catch(err){
-//         console.log(err);
-//         res.send(err);
-//     }
-// })
+// שליפה של כל סוגי תפריטים
+routerMenuType.get("./getAllMenuType",async(req,res)=>{
+    try{
+       const queryString=`select * from catering.menutype where Active=True`
+       const rows=await promiseQuery(queryString);
+       res.send(rows);
+    }
+    catch(err){
+        console.log(err);
+        res.send(err);
+    }
+})
 
 
 
