@@ -13,12 +13,34 @@ const { promiseQuery } = require("../sql");
 //1
 //הוספת הזמנה
 routerOrder.post("/addOrder", async (req, res) => {
-  const details = req.body;
+  const { user, order, menu } = req.body;
   try {
-    const queryString = `INSERT INTO catering.orders VALUES(0,"${UserId}","${MenuId}","${details.OrderDate}",
-        "${details.EventDate}","${details.EventPlace}","${details.EventTime}","${details.ArrivalTime},True"
-        "${details.FullPrice}","${details.Note}",False);`;
-    const row = await promiseQuery(queryString);
+    // הוספת משתמש במידה וצריך
+    const queryString1 = `select * from catering.users where Phone="${user.Phone}" and  Email="${user.Email}" `;
+    const isRegister = await promiseQuery(queryString1);
+    let userId = isRegister.length > 0 ? isRegister[0].Id : null;
+
+    if (isRegister.length == 0) {
+      const randomPassword = Math.floor(Math.random() * 100001);
+      const queryString2 = `INSERT INTO catering.users VALUES(0,"${user.FirstName}","${user.LastName}","${user.Phone}", "${user.Adress}","${user.Email}","${randomPassword}",3,True);`;
+      const addUser = await promiseQuery(queryString2);
+      console.log(addUser);
+      userId = addUser.insertId;
+    }
+
+    // הוספת הזמנה
+    const formattedOrderDate = new Date(order.OrderDate).toISOString().slice(0, 19).replace('T', ' ');
+    const formattedEventDate = new Date(order.EventDate).toISOString().slice(0, 19).replace('T', ' ');
+    const queryString3 = `INSERT INTO catering.orders VALUES(0,"${userId}","${order.MenuId}","${formattedOrderDate}",
+        "${formattedEventDate}","${order.EventPlace}","${order.EventTime}","",
+        ${order.FullPrice},"${order.Note}",False,${order.NumberPeople});`;
+    const addOrder = await promiseQuery(queryString3);
+
+    // הוספת מוצרים להזמנה
+    for (let i = 0; i < menu.length; i++) {
+      const queryString4 = `INSERT INTO catering.foodsOrders  VALUES (0,${addOrder.insertId},${menu[i].Id},null,null);`;
+      const row = await promiseQuery(queryString4);
+    }
     res.send(
       "ההזמנה נשלחה לכניסה להזמנה לשינויים יכנס באמצעות הסיסמא שנשלחה לך"
     );
