@@ -33,7 +33,7 @@ routerOrder.post("/addOrder", async (req, res) => {
     const formattedEventDate = new Date(order.EventDate).toISOString().slice(0, 19).replace('T', ' ');
     const queryString3 = `INSERT INTO catering.orders VALUES(0,"${userId}","${order.MenuId}","${formattedOrderDate}",
         "${formattedEventDate}","${order.EventPlace}","${order.EventTime}","",
-        ${order.FullPrice},"${order.Note}",False,${order.NumberPeople});`;
+        ${order.FullPrice},"${order.Note}",False,${order.NumberPeople}, True);`;
     const addOrder = await promiseQuery(queryString3);
 
     // הוספת מוצרים להזמנה
@@ -67,7 +67,7 @@ routerOrder.get("/getAllOrder", async (req, res) => {
 routerOrder.get("/getAllOrdersByUserId/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const queryString = `select * from catering.orders where UserId=${id}`;
+    const queryString = `select * from catering.orders where UserId=${id} and Status=True`;
     const row = await promiseQuery(queryString);
 
     for (let i = 0; i < row.length; i++) {
@@ -119,6 +119,19 @@ routerOrder.put("/UpdateApproval/:id", async (req, res) => {
     const queryString = `UPDATE catering.orders SET Approval=True WHERE Id=${id}`;
     const row = await promiseQuery(queryString);
     res.send("ההזמנה אושרה");
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
+
+//מחיקת הזמנה
+routerOrder.put("/deleteOrder/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const queryString = `UPDATE catering.orders SET Status=False WHERE Id=${id}`;
+    const row = await promiseQuery(queryString);
+    res.send("ההזמנה נמחקה");
   } catch (err) {
     console.log(err);
     res.send(err);
@@ -199,6 +212,30 @@ routerOrder.get("/getOrderThatDateTomorrow/:userId", async (req, res) => {
     res.send(err);
   }
 });
+// var nodemailer = require('nodemailer');
+
+// var transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: 'delishes147@gmail.com',
+//     pass: 'delishes147'
+//   }
+// });
+
+// var mailOptions = {
+//   from: 'delishes147@gmail.com',
+//   to: 'delishes147@gmail.com',
+//   subject: 'Sending Email using Node.js',
+//   text: 'That was easy!'
+// };
+
+// transporter.sendMail(mailOptions, function(error, info){
+//   if (error) {
+//     console.log(error);
+//   } else {
+//     console.log('Email sent: ' + info.response);
+//   }
+// });
 
 //ייצוא הראוטר
 module.exports = { routerOrder };
