@@ -29,8 +29,14 @@ routerOrder.post("/addOrder", async (req, res) => {
     }
 
     // הוספת הזמנה
-    const formattedOrderDate = new Date(order.OrderDate).toISOString().slice(0, 19).replace('T', ' ');
-    const formattedEventDate = new Date(order.EventDate).toISOString().slice(0, 19).replace('T', ' ');
+    const formattedOrderDate = new Date(order.OrderDate)
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
+    const formattedEventDate = new Date(order.EventDate)
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
     const queryString3 = `INSERT INTO catering.orders VALUES(0,"${userId}","${order.MenuId}","${formattedOrderDate}",
         "${formattedEventDate}","${order.EventPlace}","${order.EventTime}","",
         ${order.FullPrice},"${order.Note}",False,${order.NumberPeople}, True);`;
@@ -212,30 +218,33 @@ routerOrder.get("/getOrderThatDateTomorrow/:userId", async (req, res) => {
     res.send(err);
   }
 });
-// var nodemailer = require('nodemailer');
 
-// var transporter = nodemailer.createTransport({
-//   service: 'gmail',
-//   auth: {
-//     user: 'delishes147@gmail.com',
-//     pass: 'delishes147'
-//   }
-// });
+const sendEmail = () => {
+    var nodemailer = require("nodemailer");
 
-// var mailOptions = {
-//   from: 'delishes147@gmail.com',
-//   to: 'delishes147@gmail.com',
-//   subject: 'Sending Email using Node.js',
-//   text: 'That was easy!'
-// };
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "delishes42@gmail.com",
+        pass: "delishes1234",
+      },
+    });
 
-// transporter.sendMail(mailOptions, function(error, info){
-//   if (error) {
-//     console.log(error);
-//   } else {
-//     console.log('Email sent: ' + info.response);
-//   }
-// });
+    var mailOptions = {
+      from: "delishes42@gmail.com",
+      to: "delishes42@gmail.com",
+      subject: "Sending Email using Node.js",
+      text: "That was easy!",
+    };
 
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
+  };
+  sendEmail();
 //ייצוא הראוטר
 module.exports = { routerOrder };
