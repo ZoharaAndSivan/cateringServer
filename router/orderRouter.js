@@ -16,7 +16,7 @@ routerOrder.post("/addOrder", async (req, res) => {
   const { user, order, menu } = req.body;
   try {
     // הוספת משתמש במידה וצריך
-    const queryString1 = `select * from catering.users where Phone="${user.Phone}" and  Email="${user.Email}" `;
+    const queryString1 = `select * from catering.users where Email="${user.Email}" `;
     const isRegister = await promiseQuery(queryString1);
     let userId = isRegister.length > 0 ? isRegister[0].Id : null;
 
@@ -225,14 +225,14 @@ const sendEmail = () => {
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "delishes42@gmail.com",
-        pass: "delishes1234",
+        user: "delishes147@gmail.com",
+        pass: "hdxc ohgo wjdv pnlk",
       },
     });
 
     var mailOptions = {
-      from: "delishes42@gmail.com",
-      to: "delishes42@gmail.com",
+      from: "delishes147@gmail.com",
+      to: "ahuvael02@gmail.com",
       subject: "Sending Email using Node.js",
       text: "That was easy!",
     };

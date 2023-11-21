@@ -33,7 +33,7 @@ routerEventType.put("/updateActive/:id", async (req, res) => {
   const id = req.params.id;
   console.log(id);
   try {
-    const queryString = `UPDATE catering.eventtype SET Active =False WHERE Id=${id}`
+    const queryString = `UPDATE catering.eventtype SET Active=False WHERE Id=${id}`
     const row=await promiseQuery(queryString);
     res.send("סוג האירוע נמחק");
   } catch (err) {
@@ -59,19 +59,19 @@ routerEventType.post("/addEventType", async (req, res) => {
 
 // //4
 // //שינוי או תיקון שם סוג האירוע
-// routerEventType.put("/updateNameEventType/:id", async (req, res) => {
-//   //מקבלת אי די של סוג אירוע
-//   const id = req.params.id;
-//   const newName = req.body;
-//   try {
-//     const queryString = `UPDATE catering.eventtype SET Name ="${newName.Name}" WHERE Id=${id};`
-//     const row = await promiseQuery(queryString);
-//   res.send("שם סוג האירוע עודכן");
-//   } catch (err) {
-//     console.log(err);
-//     res.send(err);
-//   }
-// });
+routerEventType.put("/updateNameEventType/:id", async (req, res) => {
+  //מקבלת אי די של סוג אירוע
+  const id = req.params.id;
+  const newName = req.body;
+  try {
+    const queryString = `UPDATE catering.eventtype SET Name ="${newName.Name}" WHERE Id=${id};`
+    const row = await promiseQuery(queryString);
+  res.send("שם סוג האירוע עודכן");
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
 
 
 
