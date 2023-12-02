@@ -35,7 +35,9 @@ routerFood.post("/addFood", async (req, res) => {
     //-----------לבדוק אם המאכל הזה כבר קיים-----------------
     const queryString=`INSERT INTO catering.foods  VALUES (0,"${food.Name}",${food.FoodTypeId},"${food.Price}","${food.Image}",True);`
     const row=await promiseQuery(queryString)
-    res.send("המאכל הוסף בהצלחה")
+    food.Id= row.insertId;
+
+    res.send(food)
   }
   catch(err)
   {
@@ -84,7 +86,7 @@ routerFood.put("/updateActive/:id", async (req, res) => {
 routerFood.get("/getAllFood", async (req, res) => {
   
   try {
-    const queryString = `select * from catering.foods where Active=True`;
+    const queryString = `select * from catering.foods`;
     const row = await promiseQuery(queryString);
     res.send(row);
   } catch (err) {

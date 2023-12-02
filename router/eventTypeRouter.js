@@ -49,7 +49,9 @@ routerEventType.post("/addEventType", async (req, res) => {
   try {
     const queryString = `INSERT INTO catering.eventtype  VALUES (0,"${nameEventType.Name}","${nameEventType.Details}","${nameEventType.Image}",True)`;
     const row = await promiseQuery(queryString);
-    res.send("סוג האירוע הוסף בהצלחה");
+    nameEventType.Id= row.insertId;
+    res.send(nameEventType);
+
   } catch (err) {
     //לאחר פונקצייה זו יגש לפונקציות אחרות שיבנו לו את התפריט לאירוע החדש שהוסף
     console.log(err);
@@ -100,7 +102,7 @@ routerEventType.put("/update/:id", async (req, res) => {
   const id = req.params.id;
   const body = req.body;
   try {
-    const queryString = `UPDATE catering.eventtype SET Name ="${body.Name}",Details ="${body.Details} WHERE Id=${id};`
+    const queryString = `UPDATE catering.eventtype SET Name ="${body.Name}",Details ="${body.Details}", Image="${body.Image}", Active=${body.Active} WHERE Id=${id};`
     const row = await promiseQuery(queryString);
   res.send("תיאור עודכן");
   } catch (err) {
