@@ -22,7 +22,8 @@ routerOrder.post("/addOrder", async (req, res) => {
 
     if (isRegister.length == 0) {
       const randomPassword = Math.floor(Math.random() * 100001);
-      const queryString2 = `INSERT INTO catering.users VALUES(0,"${user.FirstName}","${user.LastName}","${user.Phone}", "${user.Adress}","${user.Email}","${randomPassword}",3,True);`;
+      const queryString2 = `INSERT INTO catering.users VALUES(0,"${user.FirstName}","${user.LastName}",
+      "${user.Phone}", "${user.Adress}","${user.Email}","${randomPassword}",3,True);`;
       const addUser = await promiseQuery(queryString2);
       console.log(addUser);
       userId = addUser.insertId;
@@ -219,32 +220,32 @@ routerOrder.get("/getOrderThatDateTomorrow/:userId", async (req, res) => {
   }
 });
 
-const sendEmail = () => {
-    var nodemailer = require("nodemailer");
+const sendEmail = (email, subject, text) => {
+  var nodemailer = require("nodemailer");
 
-    var transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "delishes147@gmail.com",
-        pass: "hdxc ohgo wjdv pnlk",
-      },
-    });
+  var transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "delishes147@gmail.com",
+      pass: "hdxc ohgo wjdv pnlk",
+    },
+  });
 
-    var mailOptions = {
-      from: "delishes147@gmail.com",
-      to: "ahuvael02@gmail.com",
-      subject: "Sending Email using Node.js",
-      text: "That was easy!",
-    };
-
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Email sent: " + info.response);
-      }
-    });
+  var mailOptions = {
+    from: "delishes147@gmail.com",
+    to: email,
+    subject: subject,
+    text: text,
   };
-  sendEmail();
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
+};
+// sendEmail();
 //ייצוא הראוטר
 module.exports = { routerOrder };
