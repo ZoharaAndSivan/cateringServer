@@ -48,6 +48,16 @@ routerOrder.post("/addOrder", async (req, res) => {
       const queryString4 = `INSERT INTO catering.foodsOrders  VALUES (0,${addOrder.insertId},${menu[i].Id},null,null);`;
       const row = await promiseQuery(queryString4);
     }
+    const subject = `<h2> הזמנתך נשלחה אלינו בהצלחה. </h2>
+    <p> על מנת לצפות או לערוך שינויים שינויים בהזמנה שביצעת עליך להתחבר לאתר באמצעות סיסמא. </p>
+  ${
+    isRegister.length == 0
+      ? `<p>  סיסמתך לאתר הינה: ${randomPassword} </p>`
+      : null
+  }
+  <p> שים ❤️ ניתן לבטל או לערוך שינויים בהזמנה עד 48 שעות ממועד האירוע. </p>
+    <p>מאחלים לך אירוע מהנה וכיף:)  </p>`;
+    sendEmail(user.Email, "הזמנתך בוצעה בהצלחה!", subject);
     res.send(
       "ההזמנה נשלחה לכניסה להזמנה לשינויים יכנס באמצעות הסיסמא שנשלחה לך"
     );
@@ -246,6 +256,5 @@ const sendEmail = (email, subject, text) => {
     }
   });
 };
-// sendEmail();
 //ייצוא הראוטר
 module.exports = { routerOrder };
