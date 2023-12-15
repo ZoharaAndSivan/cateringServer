@@ -15,18 +15,14 @@ const { promiseQuery } = require("../sql");
 routerProductToMenu.get("/getAllFoodByMenuId/:menuId", async (req, res) => {
   try {
     const { menuId } = req.params;
-    const queryString = `select * from catering.producttomenu where  MenuTypeId=${menuId}`;
+    const queryString = `SELECT ptm.Id, ptm.FoodId, ptm.MenuTypeId, ptm.Active, mt.FoodTypeId, f.Name, f.Price, f.Image
+    FROM producttomenu ptm
+    INNER JOIN menutype mt ON ptm.MenuTypeId = mt.Id
+    INNER JOIN menueventtype met ON mt.MenuId = met.Id
+    INNER JOIN foods f ON ptm.FoodId = f.Id
+    WHERE met.Id=${menuId} and f.Active=True and ptm.Active=True`;
     let row = await promiseQuery(queryString);
-    const queryString2 = `select * from catering.foods`;
-    let food = await promiseQuery(queryString2);
-    console.log(row);
-    let arr = [];
-    for (let index = 0; index < row.length; index++) {
-      const element = food.find((x) => row[index].FoodId == x.Id);
-      console.log(element);
-      if (element) arr = [...arr, element];
-    }
-    res.send(arr);
+    res.send(row);
   } catch (err) {
     res.send(err);
     console.log(err);
