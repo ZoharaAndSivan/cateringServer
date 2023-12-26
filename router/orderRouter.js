@@ -27,6 +27,9 @@ routerOrder.post("/addOrder", async (req, res) => {
       const addUser = await promiseQuery(queryString2);
       console.log(addUser);
       userId = addUser.insertId;
+    } else {
+      const queryString12 = `UPDATE catering.users SET FirstName="${user.FirstName}", LastName="${user.LastName}", Phone="${user.Phone}", Adress="${user.Adress}", Email="${user.Email}" WHERE Id=${userId}`;
+      const row12 = await promiseQuery(queryString12);
     }
 
     // הוספת הזמנה
@@ -42,10 +45,9 @@ routerOrder.post("/addOrder", async (req, res) => {
         "${formattedEventDate}","${order.EventPlace}","${order.EventTime}","",
         ${order.FullPrice},"${order.Note}",False,${order.NumberPeople}, True);`;
     const addOrder = await promiseQuery(queryString3);
-
     // הוספת מוצרים להזמנה
     for (let i = 0; i < menu.length; i++) {
-      const queryString4 = `INSERT INTO catering.foodsOrders  VALUES (0,${addOrder.insertId},${menu[i].Id},null,null);`;
+      const queryString4 = `INSERT INTO catering.foodsorders  VALUES (0,${addOrder.insertId},${menu[i].FoodId},null,null);`;
       const row = await promiseQuery(queryString4);
     }
     const subject = `<h2> הזמנתך נשלחה אלינו בהצלחה. </h2>
@@ -71,8 +73,14 @@ routerOrder.post("/addOrder", async (req, res) => {
 //ההצגת כל ההזמנות שמאושרות
 routerOrder.get("/getAllOrder", async (req, res) => {
   try {
-    const queryString = `select * from catering.orders where Approval=True and IsClose=True`;
+    const queryString = `SELECT o.*, CONCAT(u.FirstName, ' ', u.LastName)  AS UserName,  u.Phone, m.Name AS MenuName, e.Name AS EventName, m.Id as MenuId, e.Id as EventId
+    FROM catering.orders o
+    JOIN catering.users u ON o.UserId = u.Id
+    JOIN catering.menueventtype m ON o.MenuId = m.Id
+    JOIN catering.eventtype e ON m.EventId = e.Id
+    where o.Status=True`;
     const row = await promiseQuery(queryString);
+
     res.send(row);
   } catch (err) {
     console.log(err);
@@ -130,10 +138,10 @@ routerOrder.get("/getAllOrder", async (req, res) => {
 
 //4
 //אישור הזמנה
-routerOrder.put("/UpdateApproval/:id", async (req, res) => {
+routerOrder.put("/UpdateIsClose/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    const queryString = `UPDATE catering.orders SET Approval=True WHERE Id=${id}`;
+    const queryString = `UPDATE catering.orders SET IsClose=True WHERE Id=${id}`;
     const row = await promiseQuery(queryString);
     res.send("ההזמנה אושרה");
   } catch (err) {
@@ -145,6 +153,7 @@ routerOrder.put("/UpdateApproval/:id", async (req, res) => {
 //מחיקת הזמנה
 routerOrder.put("/deleteOrder/:id", async (req, res) => {
   const id = req.params.id;
+  console.log("lllll", id);
   try {
     const queryString = `UPDATE catering.orders SET Status=False WHERE Id=${id}`;
     const row = await promiseQuery(queryString);
