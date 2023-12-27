@@ -24,7 +24,6 @@ routerFoodsOrders.get("/getFoodsOrderByOrderId/:orderId", async (req, res) => {
       const food = await promiseQuery(queryString2);
       const queryString3 = `select * from catering.foodstype where Id=${food[0].FoodTypeId}`;
       const typeFood = await promiseQuery(queryString3);
-      console.log(typeFood);
       food[0].TypeName = typeFood[0].Name;
       row[i].Food = food[0];
     }

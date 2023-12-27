@@ -16,31 +16,50 @@ routerOrder.post("/addOrder", async (req, res) => {
   const { user, order, menu } = req.body;
   try {
     // הוספת משתמש במידה וצריך
-    const queryString1 = `select * from catering.users where Phone="${user.Phone}" and  Email="${user.Email}" `;
+    const queryString1 = `select * from catering.users where Email="${user.Email}" `;
     const isRegister = await promiseQuery(queryString1);
     let userId = isRegister.length > 0 ? isRegister[0].Id : null;
 
     if (isRegister.length == 0) {
       const randomPassword = Math.floor(Math.random() * 100001);
-      const queryString2 = `INSERT INTO catering.users VALUES(0,"${user.FirstName}","${user.LastName}","${user.Phone}", "${user.Adress}","${user.Email}","${randomPassword}",3,True);`;
+      const queryString2 = `INSERT INTO catering.users VALUES(0,"${user.FirstName}","${user.LastName}",
+      "${user.Phone}", "${user.Adress}","${user.Email}","${randomPassword}",3,True);`;
       const addUser = await promiseQuery(queryString2);
       console.log(addUser);
       userId = addUser.insertId;
+    } else {
+      const queryString12 = `UPDATE catering.users SET FirstName="${user.FirstName}", LastName="${user.LastName}", Phone="${user.Phone}", Adress="${user.Adress}", Email="${user.Email}" WHERE Id=${userId}`;
+      const row12 = await promiseQuery(queryString12);
     }
 
     // הוספת הזמנה
-    const formattedOrderDate = new Date(order.OrderDate).toISOString().slice(0, 19).replace('T', ' ');
-    const formattedEventDate = new Date(order.EventDate).toISOString().slice(0, 19).replace('T', ' ');
+    const formattedOrderDate = new Date(order.OrderDate)
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
+    const formattedEventDate = new Date(order.EventDate)
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
     const queryString3 = `INSERT INTO catering.orders VALUES(0,"${userId}","${order.MenuId}","${formattedOrderDate}",
         "${formattedEventDate}","${order.EventPlace}","${order.EventTime}","",
         ${order.FullPrice},"${order.Note}",False,${order.NumberPeople}, True);`;
     const addOrder = await promiseQuery(queryString3);
-
     // הוספת מוצרים להזמנה
     for (let i = 0; i < menu.length; i++) {
-      const queryString4 = `INSERT INTO catering.foodsOrders  VALUES (0,${addOrder.insertId},${menu[i].Id},null,null);`;
+      const queryString4 = `INSERT INTO catering.foodsorders  VALUES (0,${addOrder.insertId},${menu[i].FoodId},null,null);`;
       const row = await promiseQuery(queryString4);
     }
+    const subject = `<h2> הזמנתך נשלחה אלינו בהצלחה. </h2>
+    <p> על מנת לצפות או לערוך שינויים שינויים בהזמנה שביצעת עליך להתחבר לאתר באמצעות סיסמא. </p>
+  ${
+    isRegister.length == 0
+      ? `<p>  סיסמתך לאתר הינה: ${randomPassword} </p>`
+      : null
+  }
+  <p> שים ❤️ ניתן לבטל או לערוך שינויים בהזמנה עד 48 שעות ממועד האירוע. </p>
+    <p>מאחלים לך אירוע מהנה וכיף:)  </p>`;
+    sendEmail(user.Email, "הזמנתך בוצעה בהצלחה!", subject);
     res.send(
       "ההזמנה נשלחה לכניסה להזמנה לשינויים יכנס באמצעות הסיסמא שנשלחה לך"
     );
@@ -54,8 +73,14 @@ routerOrder.post("/addOrder", async (req, res) => {
 //ההצגת כל ההזמנות שמאושרות
 routerOrder.get("/getAllOrder", async (req, res) => {
   try {
-    const queryString = `select * from catering.orders where Approval=True and IsClose=True`;
+    const queryString = `SELECT o.*, CONCAT(u.FirstName, ' ', u.LastName)  AS UserName,  u.Phone, m.Name AS MenuName, e.Name AS EventName, m.Id as MenuId, e.Id as EventId
+    FROM catering.orders o
+    JOIN catering.users u ON o.UserId = u.Id
+    JOIN catering.menueventtype m ON o.MenuId = m.Id
+    JOIN catering.eventtype e ON m.EventId = e.Id
+    where o.Status=True`;
     const row = await promiseQuery(queryString);
+
     res.send(row);
   } catch (err) {
     console.log(err);
@@ -113,10 +138,10 @@ routerOrder.get("/getAllOrder", async (req, res) => {
 
 //4
 //אישור הזמנה
-routerOrder.put("/UpdateApproval/:id", async (req, res) => {
+routerOrder.put("/UpdateIsClose/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    const queryString = `UPDATE catering.orders SET Approval=True WHERE Id=${id}`;
+    const queryString = `UPDATE catering.orders SET IsClose=True WHERE Id=${id}`;
     const row = await promiseQuery(queryString);
     res.send("ההזמנה אושרה");
   } catch (err) {
@@ -128,6 +153,7 @@ routerOrder.put("/UpdateApproval/:id", async (req, res) => {
 //מחיקת הזמנה
 routerOrder.put("/deleteOrder/:id", async (req, res) => {
   const id = req.params.id;
+  console.log("lllll", id);
   try {
     const queryString = `UPDATE catering.orders SET Status=False WHERE Id=${id}`;
     const row = await promiseQuery(queryString);
@@ -212,30 +238,32 @@ routerOrder.get("/getOrderThatDateTomorrow/:userId", async (req, res) => {
     res.send(err);
   }
 });
-// var nodemailer = require('nodemailer');
 
-// var transporter = nodemailer.createTransport({
-//   service: 'gmail',
-//   auth: {
-//     user: 'delishes147@gmail.com',
-//     pass: 'delishes147'
-//   }
-// });
+const sendEmail = (email, subject, text) => {
+  var nodemailer = require("nodemailer");
 
-// var mailOptions = {
-//   from: 'delishes147@gmail.com',
-//   to: 'delishes147@gmail.com',
-//   subject: 'Sending Email using Node.js',
-//   text: 'That was easy!'
-// };
+  var transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "delishes147@gmail.com",
+      pass: "hdxc ohgo wjdv pnlk",
+    },
+  });
 
-// transporter.sendMail(mailOptions, function(error, info){
-//   if (error) {
-//     console.log(error);
-//   } else {
-//     console.log('Email sent: ' + info.response);
-//   }
-// });
+  var mailOptions = {
+    from: "delishes147@gmail.com",
+    to: email,
+    subject: subject,
+    text: text,
+  };
 
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
+};
 //ייצוא הראוטר
 module.exports = { routerOrder };

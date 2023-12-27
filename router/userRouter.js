@@ -19,7 +19,7 @@ routerUser.post("/login", async (req, res) => {
     //קבלת הנתונים שהמשתמש הקליד
     const details = req.body;
     //שאילתת שליפת משתמש מסוים
-    const queryString = `select * from catering.users where Phone="${details.Phone}" and Password="${details.Password}"`;
+    const queryString = `select * from catering.users where Email="${details.Email}" and Password="${details.Password}"`;
     const row = await promiseQuery(queryString);
     //בודק אם הוא נמצא
     if (row.length == 0)

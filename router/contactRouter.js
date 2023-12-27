@@ -58,6 +58,20 @@ routerContact.get("/getAllContactNotPerform", async (req, res) => {
       console.log(err);
     }
   });
+
+  //מחיקת יצירת קשר שבוצעה
+routerContact.put("/deleteContact/:id", async (req, res) => {
+  const id = req.params.id;
+  console.log(id);
+  try {
+    const queryString = `UPDATE catering.contact SET Perform=True WHERE Id=${id}`
+    const row=await promiseQuery(queryString);
+    res.send(" נמחק");
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
   
 
 

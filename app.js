@@ -39,6 +39,7 @@ const { mysqlConnection } = require("./sql");
 //יצירת מופע של שרת אקספרס
 const app = express();
 
+app.use(express.json());
 app.use(cors());
 app.use(bodyparser.json());
 

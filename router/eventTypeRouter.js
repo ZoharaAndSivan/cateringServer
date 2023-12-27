@@ -33,7 +33,7 @@ routerEventType.put("/updateActive/:id", async (req, res) => {
   const id = req.params.id;
   console.log(id);
   try {
-    const queryString = `UPDATE catering.eventtype SET Active =False WHERE Id=${id}`
+    const queryString = `UPDATE catering.eventtype SET Active=False WHERE Id=${id}`
     const row=await promiseQuery(queryString);
     res.send("סוג האירוע נמחק");
   } catch (err) {
@@ -49,7 +49,9 @@ routerEventType.post("/addEventType", async (req, res) => {
   try {
     const queryString = `INSERT INTO catering.eventtype  VALUES (0,"${nameEventType.Name}","${nameEventType.Details}","${nameEventType.Image}",True)`;
     const row = await promiseQuery(queryString);
-    res.send("סוג האירוע הוסף בהצלחה");
+    nameEventType.Id= row.insertId;
+    res.send(nameEventType);
+
   } catch (err) {
     //לאחר פונקצייה זו יגש לפונקציות אחרות שיבנו לו את התפריט לאירוע החדש שהוסף
     console.log(err);
@@ -59,19 +61,19 @@ routerEventType.post("/addEventType", async (req, res) => {
 
 // //4
 // //שינוי או תיקון שם סוג האירוע
-// routerEventType.put("/updateNameEventType/:id", async (req, res) => {
-//   //מקבלת אי די של סוג אירוע
-//   const id = req.params.id;
-//   const newName = req.body;
-//   try {
-//     const queryString = `UPDATE catering.eventtype SET Name ="${newName.Name}" WHERE Id=${id};`
-//     const row = await promiseQuery(queryString);
-//   res.send("שם סוג האירוע עודכן");
-//   } catch (err) {
-//     console.log(err);
-//     res.send(err);
-//   }
-// });
+routerEventType.put("/updateNameEventType/:id", async (req, res) => {
+  //מקבלת אי די של סוג אירוע
+  const id = req.params.id;
+  const newName = req.body;
+  try {
+    const queryString = `UPDATE catering.eventtype SET Name ="${newName.Name}" WHERE Id=${id};`
+    const row = await promiseQuery(queryString);
+  res.send("שם סוג האירוע עודכן");
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
 
 
 
@@ -100,7 +102,7 @@ routerEventType.put("/update/:id", async (req, res) => {
   const id = req.params.id;
   const body = req.body;
   try {
-    const queryString = `UPDATE catering.eventtype SET Name ="${body.Name}",Details ="${body.Details} WHERE Id=${id};`
+    const queryString = `UPDATE catering.eventtype SET Name ="${body.Name}",Details ="${body.Details}", Image="${body.Image}", Active=${body.Active} WHERE Id=${id};`
     const row = await promiseQuery(queryString);
   res.send("תיאור עודכן");
   } catch (err) {
