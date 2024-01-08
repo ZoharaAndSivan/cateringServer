@@ -239,6 +239,103 @@ routerOrder.get("/getOrderThatDateTomorrow/:userId", async (req, res) => {
   }
 });
 
+routerOrder.get("/getIncomesByMonths", async (req, res) => {
+  try {
+    const queryString = `SELECT 
+    m.MonthNumber AS label,
+    COALESCE(SUM(CASE WHEN o.status = TRUE THEN o.FullPrice ELSE 0 END), 0) AS TotalPrice,
+    COALESCE(AVG(CASE WHEN o.status = TRUE THEN o.FullPrice ELSE NULL END), 0) AS y
+FROM 
+    (
+        SELECT 1 AS MonthNumber UNION ALL
+        SELECT 2 UNION ALL
+        SELECT 3 UNION ALL
+        SELECT 4 UNION ALL
+        SELECT 5 UNION ALL
+        SELECT 6 UNION ALL
+        SELECT 7 UNION ALL
+        SELECT 8 UNION ALL
+        SELECT 9 UNION ALL
+        SELECT 10 UNION ALL
+        SELECT 11 UNION ALL
+        SELECT 12
+    ) AS m
+LEFT JOIN 
+    catering.orders o ON MONTH(o.EventDate) = m.MonthNumber AND o.status = TRUE AND YEAR(o.EventDate) = YEAR(CURDATE())
+GROUP BY 
+    m.MonthNumber
+ORDER BY 
+    m.MonthNumber;
+`;
+    const row = await promiseQuery(queryString);
+    res.send(row);
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
+
+routerOrder.get("/getAmountOrdersStatictics", async (req, res) => {
+  try {
+    const queryString = `SELECT 
+    m.MonthNumber AS label,
+    COUNT(o.Id) AS y
+FROM 
+    (
+        SELECT 1 AS MonthNumber UNION ALL
+        SELECT 2 UNION ALL
+        SELECT 3 UNION ALL
+        SELECT 4 UNION ALL
+        SELECT 5 UNION ALL
+        SELECT 6 UNION ALL
+        SELECT 7 UNION ALL
+        SELECT 8 UNION ALL
+        SELECT 9 UNION ALL
+        SELECT 10 UNION ALL
+        SELECT 11 UNION ALL
+        SELECT 12
+    ) AS m
+LEFT JOIN 
+    catering.orders o ON MONTH(o.EventDate) = m.MonthNumber AND YEAR(o.EventDate) = YEAR(CURDATE())
+GROUP BY 
+    m.MonthNumber
+ORDER BY 
+    m.MonthNumber;
+`;
+    const row = await promiseQuery(queryString);
+    res.send(row);
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
+
+routerOrder.get("/getPopularEvents", async (req, res) => {
+  try {
+    const queryString = `SELECT 
+    et.Name AS label,
+    COUNT(o.Id) AS OrderCount,
+    ROUND((COUNT(o.Id) * 100.0) / (SELECT COUNT(*) FROM catering.orders), 2) AS y
+FROM 
+    catering.orders o
+JOIN 
+    catering.menueventtype met ON o.MenuId = met.Id
+JOIN 
+    catering.eventtype et ON met.EventId = et.Id
+GROUP BY 
+    et.Name
+ORDER BY 
+    y DESC;
+
+`;
+    const row = await promiseQuery(queryString);
+    res.send(row);
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+});
+
 const sendEmail = (email, subject, text) => {
   var nodemailer = require("nodemailer");
 
