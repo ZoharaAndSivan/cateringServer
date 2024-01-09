@@ -153,7 +153,7 @@ routerMenuType.post("/addTypeOfMenu/:MenuId", async (req, res) => {
     //     //אם כן ילך לטבלת סוגי מאכלים ויוסיף
     //    }
     //    else{
-    const queryString = `INSERT INTO catering.menutype  VALUES (0,${id},${rowType.FoodTypeId},"${rowType.Amount}","${rowType.ExtraPrice}","${rowType.ExtraType}",True);`;
+    const queryString = `INSERT INTO catering.menutype  VALUES (0,${id},${rowType.FoodTypeId},"${rowType.Amount}","${rowType.ExtraPrice}",True);`;
     const row = await promiseQuery(queryString);
     res.send(" הוסף בהצלחה");
     //    }

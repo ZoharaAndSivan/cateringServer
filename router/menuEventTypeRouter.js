@@ -112,7 +112,7 @@ routerMenuEventType.post("/addMenuEventType", async (req, res) => {
     const row = await promiseQuery(queryString);
     const menuId = row.insertId;
     for (let i = 0; i < menuType.length; i++) {
-      const queryString2 = `INSERT INTO catering.menutype VALUES (0,${menuId},${menuType[i].FoodTypeId},${menuType[i].Amount},${menuType[i].ExtraPrice},0,True)`;
+      const queryString2 = `INSERT INTO catering.menutype VALUES (0,${menuId},${menuType[i].FoodTypeId},${menuType[i].Amount},${menuType[i].ExtraPrice},True)`;
       const row2 = await promiseQuery(queryString2);
       const menuTypeId = row2.insertId;
       const arr = productsToMenu.filter(x => x.FoodTypeId == menuType[i].FoodTypeId);

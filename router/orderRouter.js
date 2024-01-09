@@ -51,6 +51,7 @@ routerOrder.post("/addOrder", async (req, res) => {
       const row = await promiseQuery(queryString4);
     }
     const subject = `<h2> הזמנתך נשלחה אלינו בהצלחה. </h2>
+    <p> ההזמנה נשלחה אלינו ואנו מטפלים בה. כאשר היא תאושר תקבל על כך הודעה.  </p>
     <p> על מנת לצפות או לערוך שינויים שינויים בהזמנה שביצעת עליך להתחבר לאתר באמצעות סיסמא. </p>
   ${
     isRegister.length == 0
@@ -143,6 +144,9 @@ routerOrder.put("/UpdateIsClose/:id", async (req, res) => {
   try {
     const queryString = `UPDATE catering.orders SET IsClose=True WHERE Id=${id}`;
     const row = await promiseQuery(queryString);
+    const queryString2 = `select * from catering.users u join catering.orders o on u.Id=o.UserId WHERE o.Id=${id}`;
+    const row2 = await promiseQuery(queryString2);
+    sendEmail(rows2[0].Email, "ההזמנה אושרה", "ההזמנה שביצעת אושרה בהצלחה והיא תבוצע בתאריך האירוע ")
     res.send("ההזמנה אושרה");
   } catch (err) {
     console.log(err);
