@@ -108,20 +108,28 @@ routerMenuEventType.put("/updateActive/:id", async (req, res) => {
 routerMenuEventType.post("/addMenuEventType", async (req, res) => {
   const { menuEventType, productsToMenu, menuType } = req.body;
   try {
+    let result = { menuEventType: menuEventType, menuTypes: [] };
     const queryString = `INSERT INTO catering.menueventtype  VALUES (0,${menuEventType.EventId},"${menuEventType.Name}","${menuEventType.MinimumPeople}","${menuEventType.Price}",True)`;
     const row = await promiseQuery(queryString);
     const menuId = row.insertId;
+    result.menuEventType.Id = menuId;
     for (let i = 0; i < menuType.length; i++) {
       const queryString2 = `INSERT INTO catering.menutype VALUES (0,${menuId},${menuType[i].FoodTypeId},${menuType[i].Amount},${menuType[i].ExtraPrice},True)`;
       const row2 = await promiseQuery(queryString2);
       const menuTypeId = row2.insertId;
-      const arr = productsToMenu.filter(x => x.FoodTypeId == menuType[i].FoodTypeId);
+      result.menuTypes = [
+        ...result.menuTypes,
+        { ...menuType, MenuId: menuId, Id: menuTypeId },
+      ];
+      const arr = productsToMenu.filter(
+        (x) => x.FoodTypeId == menuType[i].FoodTypeId
+      );
       for (let j = 0; j < arr.length; j++) {
         const queryString3 = `INSERT INTO catering.producttomenu VALUES (0,${arr[j].FoodId},${menuTypeId},True)`;
-        const row3 = await promiseQuery(queryString3); 
+        const row3 = await promiseQuery(queryString3);
       }
     }
-    res.send("התווסף בהצלחה");
+    res.send(result);
   } catch (err) {
     console.log(err);
     res.send(err);
