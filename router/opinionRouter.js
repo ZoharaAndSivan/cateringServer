@@ -36,7 +36,7 @@ routerOpinion.post("/addOpinion/:userId", async (req, res) => {
       const row = await promiseQuery(queryString);
       res.send("חוות הדעת  הוספה בהצלחה");
     } catch (err) {
-      console.log(err);
+      console.log(err); 
       res.send(err);
     }
   });
