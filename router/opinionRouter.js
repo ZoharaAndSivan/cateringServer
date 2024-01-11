@@ -29,7 +29,7 @@ routerOpinion.get("/getAllOpinion", async (req, res) => {
 //2
 //הוספת חוות דעת
 routerOpinion.post("/addOpinion/:userId", async (req, res) => {
-    const userId=req.params.id
+    const userId=req.params.userId
     const opinion = req.body;
     try {
       const queryString = `INSERT INTO catering.opinion  VALUES (0,"${userId}","${opinion.OpinionWrite}",False)`;
